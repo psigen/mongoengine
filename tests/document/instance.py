@@ -660,7 +660,7 @@ class InstanceTest(unittest.TestCase):
 
         embedded_copy = copy.deepcopy(doc.embedded_field)
 
-        self.assertEqual(embedded_copy.content, embedded_field.content)
+        self.assertEqual(embedded_copy.string, embedded_field.string)
         self.assertHasInstance(embedded_copy, doc)
 
     def test_embedded_document_instance(self):
