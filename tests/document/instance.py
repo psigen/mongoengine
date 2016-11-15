@@ -3,6 +3,7 @@ import sys
 sys.path[0:0] = [""]
 
 import bson
+import copy
 import os
 import pickle
 import unittest
@@ -644,6 +645,23 @@ class InstanceTest(unittest.TestCase):
 
         self.assertTrue('content' in Comment._fields)
         self.assertFalse('id' in Comment._fields)
+
+    def test_embedded_document_copy(self):
+        """Ensure that embedded documents can be deep copied correctly.
+        """
+        class Embedded(EmbeddedDocument):
+            string = StringField()
+
+        class Doc(Document):
+            embedded_field = EmbeddedDocumentField(Embedded)
+
+        Doc.drop_collection()
+        doc = Doc(embedded_field=Embedded(string="Hi"))
+
+        embedded_copy = copy.deepcopy(doc.embedded_field)
+
+        self.assertEqual(embedded_copy.content, embedded_field.content)
+        self.assertHasInstance(embedded_copy, doc)
 
     def test_embedded_document_instance(self):
         """Ensure that embedded documents can reference parent instance

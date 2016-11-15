@@ -81,6 +81,15 @@ class EmbeddedDocument(BaseDocument):
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    def __getstate__(self):
+        data = super(EmbeddedDocument, self).__getstate__()
+        data['_instance'] = self._instance
+        return data
+
+    def __setstate__(self, data):
+        super(EmbeddedDocument, self).__setstate__(data)
+        self._instance = data.get('_instance')
+
     def save(self, *args, **kwargs):
         self._instance.save(*args, **kwargs)
 
